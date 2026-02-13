@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/* p.XX [Auto] スキャフォールディングで自動生成 */
 using Microsoft.EntityFrameworkCore;
 
 namespace SampleMvc.Models;
@@ -15,10 +14,13 @@ public partial class MvcdbContext : DbContext
     {
     }
 
+    // Personテーブル
     public virtual DbSet<Person> People { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Name=MvcdbContext");
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,6 +39,7 @@ public partial class MvcdbContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
+
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

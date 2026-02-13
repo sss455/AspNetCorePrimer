@@ -1,0 +1,90 @@
+﻿@* p.52～ Index.cshtmlページ *@
+
+@* ■Razorページについて■ *@
+@* ・拡張子が「.cshtml」となるViewページではRazorというHTML形式を拡張した構文が使われている *@
+@* ・Razor構文では、通常のHTML記述と混ぜてC#の文法を使うことができる。 *@
+
+
+@* ■「@model」ディレクティブについて■ *@
+@* ・ASP.NET Core MVCでは、ControllerクラスとViewクラスのデータのやり取りとして、Modelプロパティが使われる。*@
+@* 　Controller側でViewメソッドに渡された「_context.People.ToListAsync()」は、そのままView.Modelプロパティに設定される。*@
+@* ・ViewページでView.Modelプロパティを利用するときに、そのままでは型が動的な型(dynamic)となるためインテリセンスが効かない。*@
+@* 　そのためView.Modelプロパティがどのような型なのかを知らせるために「@model」キーワードを使って型を設定する。*@
+@model IEnumerable<SampleMvc.Models.Person>
+
+
+@* cshtmlファイル内にC#のコードを書きたい場合,「@{...}」の中にC＃のコードを書くことができる。*@
+@{
+    // ■ViewDataコレクションについて■
+    // ・ViewDataコレクションは、「ページ間」や「ControllerクラスとViewクラスのデータの受け渡し」に使われる。
+    // 　テーブルデータなどはModelクラスで受け渡しをすることが多いが、ちょっとしたデータの時にはViewDataコレクションを使う。
+    // ・ViewDataコレクションは「Key, Value」形式で値を持つ。
+    // ・ViewDataコレクションに設定したデータは型が失われてobject型になってしまうため、使う時が適宜キャストが必要となる。
+    // ・ここ設定している「ViewData["Title"]」は、共通レイアウトの「_Laycout.cshtml」の <title>タグで使用される。
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    @* ■タグヘルパーについて■ *@
+    @* ・ASP.NET Core MVCでは、HTMLのいくつかのタグが拡張されている。*@
+    @* ・以下の<a>タグでは、本来の<a>タグにはない「asp-action」という属性が使われている。*@
+    @* ・Razor構文では「asp-」で始まる属性を見つけたときに、独自の拡張と行う。*@
+    @* ・これを「タグヘルパー」という。*@
+    @* ・この拡張属性は、ASP.NET Core MVCで変換されてブラウザーで表示するときには「/people/Create」のように自動的に変換される。*@
+    <a asp-action="Create">Create New</a>
+    @*               ↓                        *@
+    @* <!-- 自動変換された<a>タグ -->          *@
+    @* <a href="/people/Create">Create New</a> *@
+</p>
+
+<!-- テーブル -->
+<table class="table">
+    <!-- テーブルヘッダー -->
+    <thead>
+        <tr>
+            <!-- Id -->
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <!-- 名前 -->
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <!-- 年齢 -->
+            <th>
+                @Html.DisplayNameFor(model => model.Age)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <!-- テーブルボディ -->
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            @* p.61 [Add] Id列を追加し、詳細画面(Details)へのリンクを付ける *@
+            <!-- Id -->
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">
+                    @Html.DisplayFor(modelItem => item.Id)
+                </a>
+            </td>
+            <!-- 名前 -->
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <!-- 年齢 -->
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <!-- Edit／Details／Deleteリンク -->
+            <td>
+                <a asp-action="Edit"    asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete"  asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

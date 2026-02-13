@@ -3,18 +3,18 @@ using SampleMvc.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-//// p.43 [Add] データベース接続設定を追加
-//builder.Services.AddDbContext<MvcdbContext>(options =>
-//    // ※Postgresqlの場合は、UseNpgsqlメソッドを使う
-//    options.UseNpgsql(builder.Configuration.GetConnectionString("MvcdbContext") 
-//                        ?? throw new InvalidOperationException("Connection string 'MvcdbContext' not found.")
-//                     )
-//);
-
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// p.43 [Add] データベース接続設定を追加
+builder.Services.AddDbContext<MvcdbContext>(options =>
+    // ※Postgresqlの場合は、UseNpgsqlメソッドを使う
+    options.UseNpgsql(builder.Configuration.GetConnectionString("MvcdbContext")
+                        ?? throw new InvalidOperationException("Connection string 'MvcdbContext' not found.")
+                     )
+);
+
+
 
 var app = builder.Build();
 
