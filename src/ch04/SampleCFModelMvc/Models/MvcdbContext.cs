@@ -1,0 +1,17 @@
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace SampleCFModelMvc.Models;
+
+public partial class MvcdbContext : DbContext
+{
+    public MvcdbContext()
+    {
+    }
+
+    public MvcdbContext(DbContextOptions<MvcdbContext> options)
+        : base(options)
+    {
+    }
+
+    public virtual DbSet<Person> Person { get; set; }
+}

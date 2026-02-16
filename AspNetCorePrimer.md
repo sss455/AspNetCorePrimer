@@ -1,6 +1,6 @@
 ## 目次
-* 第1章 ASP.NET Core MVCの概要
-* 第2章 ASP.NET Core MVCプロジェクト
+* 第1章 ASP\.NET Core MVCの概要
+* 第2章 ASP\.NET Core MVCプロジェクト
 * 第3章 スキャフォールディングの利用
 * 第4章 Modelの活用
 * 第5章 Viewの活用
@@ -13,7 +13,7 @@
 * 第12章 認証
 * 第13章 シングルページアプリケーション（SPA）
 * 第14章 Azureへデプロイ
-* 付録A マルチ環境ともう1つのASP.NET Coreアプリ
+* 付録A マルチ環境ともう1つのASP\.NET Coreアプリ
 
 <hr>
 
@@ -39,9 +39,11 @@
 
 **【具体的な手順】**
 
+
 **(1) 新しいプロジェクトを作成する**
 　　テンプレート　：「ASP.NET Core Web アプリ（Model-View-Controller）」
 　　プロジェクト名：「SampleMvc」
+
 
 **(2) データベースユーザーを作成**
 ```
@@ -52,6 +54,7 @@
 新しいロールに対して別のロールを作成する権限を与えますか？ (y/n) n
 パスワード:
 ```
+
 
 **(3) データベースを作成する**
 ```
@@ -92,6 +95,7 @@ psql (18.1)
 postgres=# ALTER ROLE mvcuser WITH PASSWORD 'mvcuser';
 ```
 
+
 **(4) Personテーブルを作成する**
 ```sql
 -- ■ SQLServerの場合
@@ -114,12 +118,14 @@ CREATE TABLE person (
 );
 ```
 
+
 **(5) Personテーブルのデータを作成する**
 ```sql
 INSERT INTO Person(name, age) VALUES('matsuda', 50);
 INSERT INTO Person(name, age) VALUES('yamada',  40);
 INSERT INTO Person(name, age) VALUES('sato',    30);
 ```
+
 
 **(6) NuGetパッケージを追加する**
 <u>■ SQLServerの場合</u>
@@ -134,6 +140,7 @@ INSERT INTO Person(name, age) VALUES('sato',    30);
  ・Microsoft.VisualStudio.Web.CodeGeneration.Design
  ・Npgsql.EntityFrameworkCore.PostgreSQL
 ※「Microsoft.EntityFrameworkCore.SqlServer」はスキャフォールディングで必要になる場合があるとのこと。
+
 
 **(7) Modelクラスを自動作成する**
 > **dotnet ef コマンド**　<font color="red">※SQLServerの場合</font>
@@ -165,6 +172,7 @@ INSERT INTO Person(name, age) VALUES('sato',    30);
 > Build started...
 > Build succeeded.
 > ```
+
 
 **(8) Program.cs／appsetting.jsonを修正する**
 > **Program.cs**
@@ -204,8 +212,389 @@ INSERT INTO Person(name, age) VALUES('sato',    30);
 **(10) 動作確認**
 
 <br>
+<hr>
+<br>
 
 
+### 第4章 Modelの活用
+
+ASP\.NET Core MVCアプリケーションにおけるデータベースへアクセスする2つの方法。
+1. データベースからModelを作る方法（<font color="red">データベースファースト</font>）
+2. Modelクラスのコードからデータベースを作成する方法（<font color="red">コードファースト</font>）
+
+**[手順の流れ]**
+　(1) DBに作成したテーブルにアクセスするModelクラスを、コマンドラインを使って作成（dotnet ef）
+　(2) 接続情報をappsettings.jsに追い出す
+　(3) スキャフォールディング機能を実行
+　(4) 動作確認
+ [データベースの変更を反映]
+　(5) 
+　(6) 
+　(7) 
+　(8) 
 
 
+第3章の手順と同じ。
+
+
+`Usage: dotnet ef dbcontext scaffold [arguments] [options]`
+
+```
+Arguments:
+  <CONNECTION>  The connection string to the database.
+  <PROVIDER>    The provider to use. (E.g. Microsoft.EntityFrameworkCore.SqlServer)
+
+Options:
+  -d|--data-annotations                  Use attributes to configure the model (where possible). If omitted, only the fluent API is used.
+  -c|--context <NAME>                    The name of the DbContext. Defaults to the database name.
+  --context-dir <PATH>                   The directory to put the DbContext file in. Paths are relative to the project directory.
+  -f|--force                             Overwrite existing files.
+  -o|--output-dir <PATH>                 The directory to put files in. Paths are relative to the project directory.
+  --schema <SCHEMA_NAME>...              The schemas of tables and views to generate entity types for. All tables and views in the schemas will be included in the model, even if they are not explicitly included with the --table parameter.
+  -t|--table <TABLE_NAME>...             The tables and views to generate entity types for. Tables or views in a specific schema can be included using the 'schema.table' or 'schema.view' format.
+  --use-database-names                   Use table, view, sequence, and column names directly from the database.
+  --json                                 Show JSON output. Use with --prefix-output to parse programmatically.
+  -n|--namespace <NAMESPACE>             The namespace to use. Matches the directory by default.
+  --context-namespace <NAMESPACE>        The namespace of the DbContext class. Matches the directory by default.
+  --no-onconfiguring                     Don't generate DbContext.OnConfiguring.
+  --no-pluralize                         Don't use the pluralizer.
+  -p|--project <PROJECT>                 The project to use. Defaults to the current working directory.
+  -s|--startup-project <PROJECT>         The startup project to use. Defaults to the current working directory.
+  --framework <FRAMEWORK>                The target framework. Defaults to the first one in the project.
+  --configuration <CONFIGURATION>        The configuration to use.
+  --runtime <RUNTIME_IDENTIFIER>         The runtime to use.
+  --msbuildprojectextensionspath <PATH>  Obsolete
+  --no-build                             Don't build the project. Intended to be used when the build is up-to-date.
+  -h|--help                              Show help information
+  -v|--verbose                           Show verbose output.
+  --no-color                             Don't colorize output.
+  --prefix-output                        Prefix output with level.
+  ```
+
+
+p.97～
+
+```sql
+-- ■SQL Serverの場合
+CREATE TABLE Person (
+	id   int          INDENTITY(1, 1) NOT NULL,
+	name nvarchar(50) NOT NULL,
+	age  int          NOT NULL,
+  CONSTRAINT PK_People PRIMARY KEY CLUSTERD
+  (
+	  id ASC
+  ) WITH (
+	  PAD_INDEX              = OFF,
+	  STATISTICS_NORECOMPUTE = OFF,
+	  IGNORE_DUP_KEY         = OFF,
+	  ALLOW_ROW_LOCKS        = ON,
+	  ALLOW_PAGE_LOCKS       = ON
+  ) ON PRIMARY;
+
+ALTER TABLE Person 
+  WITH CHECK 
+  ADD CONSTRAINT FK_Person_Address 
+  FOREIGN KEY(address_id) 
+  REFERENCES Address (id);
+
+ALTER TABLE Person 
+  CHECK CONSTRAINT FK_Person_Address;
+```
+
+```sql
+-- ■PostgreSQLの場合
+CREATE TABLE Address (
+    id   integer     GENERATED ALWAYS AS IDENTITY,
+    name varchar(10) NOT NULL,
+  CONSTRAINT pk_address PRIMARY KEY (id)
+);
+
+CREATE TABLE Person (
+    id          integer     GENERATED ALWAYS AS IDENTITY,
+    name        varchar(50) NOT NULL,
+    age         integer     NOT NULL,
+    address_id  integer     NOT NULL,
+    CONSTRAINT pk_people PRIMARY KEY (id)
+);
+
+ALTER TABLE Person
+  ADD CONSTRAINT fk_person_address
+  FOREIGN KEY (address_id)
+  REFERENCES Address (id);
+```
+
+
+**都道府県のデータを挿入**
+```sql
+-- ■Addressテーブルへデータを挿入するクエリ
+INSERT INTO Address(name) VALUES('北海道');
+INSERT INTO Address(name) VALUES('青森県');
+INSERT INTO Address(name) VALUES('岩手県');
+INSERT INTO Address(name) VALUES('宮城県');
+INSERT INTO Address(name) VALUES('秋田県');
+INSERT INTO Address(name) VALUES('山形県');
+INSERT INTO Address(name) VALUES('福島県');
+INSERT INTO Address(name) VALUES('茨城県');
+INSERT INTO Address(name) VALUES('栃木県');
+INSERT INTO Address(name) VALUES('群馬県');
+INSERT INTO Address(name) VALUES('埼玉県');
+INSERT INTO Address(name) VALUES('千葉県');
+INSERT INTO Address(name) VALUES('東京都');
+INSERT INTO Address(name) VALUES('神奈川県');
+INSERT INTO Address(name) VALUES('新潟県');
+INSERT INTO Address(name) VALUES('富山県');
+INSERT INTO Address(name) VALUES('石川県');
+INSERT INTO Address(name) VALUES('福井県');
+INSERT INTO Address(name) VALUES('山梨県');
+INSERT INTO Address(name) VALUES('長野県');
+INSERT INTO Address(name) VALUES('岐阜県');
+INSERT INTO Address(name) VALUES('静岡県');
+INSERT INTO Address(name) VALUES('愛知県');
+INSERT INTO Address(name) VALUES('三重県');
+INSERT INTO Address(name) VALUES('滋賀県');
+INSERT INTO Address(name) VALUES('京都府');
+INSERT INTO Address(name) VALUES('大阪府');
+INSERT INTO Address(name) VALUES('兵庫県');
+INSERT INTO Address(name) VALUES('奈良県');
+INSERT INTO Address(name) VALUES('和歌山県');
+INSERT INTO Address(name) VALUES('鳥取県');
+INSERT INTO Address(name) VALUES('島根県');
+INSERT INTO Address(name) VALUES('岡山県');
+INSERT INTO Address(name) VALUES('広島県');
+INSERT INTO Address(name) VALUES('山口県');
+INSERT INTO Address(name) VALUES('徳島県');
+INSERT INTO Address(name) VALUES('香川県');
+INSERT INTO Address(name) VALUES('愛媛県');
+INSERT INTO Address(name) VALUES('高知県');
+INSERT INTO Address(name) VALUES('福岡県');
+INSERT INTO Address(name) VALUES('佐賀県');
+INSERT INTO Address(name) VALUES('長崎県');
+INSERT INTO Address(name) VALUES('熊本県');
+INSERT INTO Address(name) VALUES('大分県');
+INSERT INTO Address(name) VALUES('宮崎県');
+INSERT INTO Address(name) VALUES('鹿児島県');
+INSERT INTO Address(name) VALUES('沖縄県');
+```
+
+**dotnet efコマンドを再実行する**
+> **SQLServerの場合**
+> ```sh
+> dotnet ef dbcontext scaffold "Server=.;Database=mvcdb;Trusted_Connection=True;TrustServerCertificate=Yes" Microsoft.EntityFrameworkCore.SqlServer -o Models -f
+> ```
+
+> **PostgreSQLの場合**
+> ```sh
+> > dotnet ef dbcontext scaffold "Server=localhost; Port=5432; Database=mvcdb; Username=mvcuser; Password=mvcuser" Npgsql.EntityFrameworkCore.PostgreSQL -o Models -f
+> ```
+※強制的に上書きをする<font color="blue">「-f」オプション</font>を付ける。
+
+**スキャフォールディング機能を再実行する**
+
+**動作確認**
+
+<br>
+
+#### 4.3 独自のModelクラス
+<font color="red">コードファースト</font>：Modelクラスを作ってからデータベースを自動生成する機能
+
+**新しいプロジェクトを作成する**
+　　テンプレート　：「ASP.NET Core Web アプリ（Model-View-Controller）」
+　　プロジェクト名：「SampleCFModelMvc」
+
+**Personクラスを作成する**
+```cs
+namespace SampleCFModelMvc.Models;
+
+public class Person
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; } = null!;
+
+    public int Age { get; set; }
+}
+```
+
+**NuGetパッケージを追加**
+SampleCFModelMvc.csprjファイルへ追加
+```xml
+  <!-- ■SQL Serverの場合 -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3"></PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.3"></PackageReference>
+  </ItemGroup>
+```
+
+```xml
+  <!-- ■PostgreSQLの場合 -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3"></PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.3"></PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+  </ItemGroup>
+```
+
+**DbContextクラスを作る**
+```cs
+using Microsoft.EntityFrameworkCore;
+
+namespace SampleCFModelMvc.Models;
+
+public class MvcdbContext : DbContext
+{
+    public MvcdbContext()
+    {
+    }
+
+    public MvcdbContext(DbContextOptions<MvcdbContext> options) : base(options)
+    {
+    }
+
+    public virtual DbSet<Person> People { get; set; }
+}
+```
+
+**Program.csファイルを修正する**
+```cs
+// ■SQL Serverの場合
+...略...
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<MvcdbContext>(
+    options => options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
+...略...
+```
+
+```cs
+// ■PostgreSQLの場合
+...略...
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<MvcdbContext>(
+    options => options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
+...略...
+```
+
+**appsettings.jsonに接続文字列を追加する**
+```json
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost; Port=5432; Database=mvcdb; Username=mvcuser; Password=mvcuser"
+  },
+```
+
+**データベースを作成する**
+```
+dotnet ef migrations add Initial
+dotnet ef database update
+```
+
+**データベースの削除**
+```
+dotnet ef database drop
+```
+
+**スキャフォールディング機能を実行する**
+
+**動作確認**
+
+<br>
+
+**Addressクラスを作る**
+```cs
+namespace SampleCFModelMvc.Models;
+
+public class Address
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = null!;
+}
+```
+
+**Personクラスを修正する**
+```cs
+namespace SampleCFModelMvc.Models;
+
+public class Person
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; } = null!;
+
+    public int Age { get; set; }
+
+    // Addressへ外部リンク★
+    public int AddressId { get; set; }
+    public Address Address { get; set; } = null!;
+}
+```
+
+**マイグレーションしてデータベースを更新する**
+```
+dotnet ef migrations add ChangePerson
+dotnet ef database update
+```
+
+**Addressへデータ挿入**
+```sql
+INSERT INTO code_first."Address"("Name") VALUES('北海道');
+INSERT INTO code_first."Address"("Name") VALUES('青森県');
+INSERT INTO code_first."Address"("Name") VALUES('岩手県');
+INSERT INTO code_first."Address"("Name") VALUES('宮城県');
+INSERT INTO code_first."Address"("Name") VALUES('秋田県');
+INSERT INTO code_first."Address"("Name") VALUES('山形県');
+INSERT INTO code_first."Address"("Name") VALUES('福島県');
+INSERT INTO code_first."Address"("Name") VALUES('茨城県');
+INSERT INTO code_first."Address"("Name") VALUES('栃木県');
+INSERT INTO code_first."Address"("Name") VALUES('群馬県');
+INSERT INTO code_first."Address"("Name") VALUES('埼玉県');
+INSERT INTO code_first."Address"("Name") VALUES('千葉県');
+INSERT INTO code_first."Address"("Name") VALUES('東京都');
+INSERT INTO code_first."Address"("Name") VALUES('神奈川県');
+INSERT INTO code_first."Address"("Name") VALUES('新潟県');
+INSERT INTO code_first."Address"("Name") VALUES('富山県');
+INSERT INTO code_first."Address"("Name") VALUES('石川県');
+INSERT INTO code_first."Address"("Name") VALUES('福井県');
+INSERT INTO code_first."Address"("Name") VALUES('山梨県');
+INSERT INTO code_first."Address"("Name") VALUES('長野県');
+INSERT INTO code_first."Address"("Name") VALUES('岐阜県');
+INSERT INTO code_first."Address"("Name") VALUES('静岡県');
+INSERT INTO code_first."Address"("Name") VALUES('愛知県');
+INSERT INTO code_first."Address"("Name") VALUES('三重県');
+INSERT INTO code_first."Address"("Name") VALUES('滋賀県');
+INSERT INTO code_first."Address"("Name") VALUES('京都府');
+INSERT INTO code_first."Address"("Name") VALUES('大阪府');
+INSERT INTO code_first."Address"("Name") VALUES('兵庫県');
+INSERT INTO code_first."Address"("Name") VALUES('奈良県');
+INSERT INTO code_first."Address"("Name") VALUES('和歌山県');
+INSERT INTO code_first."Address"("Name") VALUES('鳥取県');
+INSERT INTO code_first."Address"("Name") VALUES('島根県');
+INSERT INTO code_first."Address"("Name") VALUES('岡山県');
+INSERT INTO code_first."Address"("Name") VALUES('広島県');
+INSERT INTO code_first."Address"("Name") VALUES('山口県');
+INSERT INTO code_first."Address"("Name") VALUES('徳島県');
+INSERT INTO code_first."Address"("Name") VALUES('香川県');
+INSERT INTO code_first."Address"("Name") VALUES('愛媛県');
+INSERT INTO code_first."Address"("Name") VALUES('高知県');
+INSERT INTO code_first."Address"("Name") VALUES('福岡県');
+INSERT INTO code_first."Address"("Name") VALUES('佐賀県');
+INSERT INTO code_first."Address"("Name") VALUES('長崎県');
+INSERT INTO code_first."Address"("Name") VALUES('熊本県');
+INSERT INTO code_first."Address"("Name") VALUES('大分県');
+INSERT INTO code_first."Address"("Name") VALUES('宮崎県');
+INSERT INTO code_first."Address"("Name") VALUES('鹿児島県');
+INSERT INTO code_first."Address"("Name") VALUES('沖縄県');
+```
+
+**スキャフォールディング機能を再実行する**
 
