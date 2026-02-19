@@ -41,17 +41,21 @@
 
 
 **(1) 新しいプロジェクトを作成する**
-　　テンプレート　：「ASP.NET Core Web アプリ（Model-View-Controller）」
+　　テンプレート　：「ASP\.NET Core Web アプリ（Model-View-Controller）」
 　　プロジェクト名：「SampleMvc」
 
 
 **(2) データベースユーザーを作成**
 ```
 ※PostgreSQLの場合
-> createuser --interactive mvcuser -U postgres
-新しいロールをスーパーユーザーにしますか？ (y/n) n
-新しいロールに対してデータベースを作成する権限を与えますか？ (y/n) n
-新しいロールに対して別のロールを作成する権限を与えますか？ (y/n) n
+> createuser --interactive mvcuser -P -U postgres
+新しいロールのためのパスワード:
+
+もう一度入力してください：
+
+新しいロールをスーパーユーザーにしますか？ (y/n)n
+新しいロールに対してデータベースを作成する権限を与えますか？ (y/n)n
+新しいロールに対して別のロールを作成する権限を与えますか？ (y/n)n
 パスワード:
 ```
 
@@ -137,8 +141,8 @@ INSERT INTO Person(name, age) VALUES('sato',    30);
  ・Microsoft.EntityFrameworkCore.Design
  ・Microsoft.EntityFrameworkCore.SqlServer
  ・Microsoft.EntityFrameworkCore.Tools
- ・Microsoft.VisualStudio.Web.CodeGeneration.Design
- ・Npgsql.EntityFrameworkCore.PostgreSQL
+ <font color="blue">・Microsoft.VisualStudio.Web.CodeGeneration.Design</font>
+ <font color="blue"> ・Npgsql.EntityFrameworkCore.PostgreSQL</font>
 ※「Microsoft.EntityFrameworkCore.SqlServer」はスキャフォールディングで必要になる場合があるとのこと。
 
 
