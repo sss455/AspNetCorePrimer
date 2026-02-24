@@ -48,7 +48,7 @@
 **(2) データベースユーザーを作成**
 ```
 ※PostgreSQLの場合
-> createuser --interactive mvcuser -P -U postgres
+> createuser mvcuser --interactive -P -U postgres
 新しいロールのためのパスワード:
 
 もう一度入力してください：
@@ -63,7 +63,7 @@
 **(3) データベースを作成する**
 ```
 ※PostgreSQLの場合
-> createdb -O mvcuser mvcdb -U postgres
+> createdb mvcdb -O mvcuser -U postgres
 パスワード:
 ```
 <font color="blue">-Oオプション</font>を使い、データベースの所有者としてmvcuserを指定する。
@@ -172,6 +172,7 @@ INSERT INTO Person(name, age) VALUES('sato',    30);
 > 詳細は https://go.microsoft.com/fwlink/?linkid=2131148 を参照してください。
 > 接続文字列の保存に関する詳細なガイダンスについては、https://go.microsoft.com/fwlink/?LinkId=723263 を参照してください。
 > 　↓
+> 　↓
 > > dotnet ef dbcontext scaffold "Name=MvcdbContext" Npgsql.EntityFrameworkCore.PostgreSQL -o Models
 > Build started...
 > Build succeeded.
@@ -195,7 +196,7 @@ INSERT INTO Person(name, age) VALUES('sato',    30);
 > builder.Services.AddControllersWithViews();
 > builder.Services.AddDbContext<MvcdbContext>(options =>
 >     // ※Postgresqlの場合は、UseNpgsqlメソッドを使う
->     options.UseNpgsql(builder.Configuration.GetConnectionString("MvcdbContext")));
+>     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 > ```
 
 > **appsetting.json**
@@ -208,7 +209,7 @@ INSERT INTO Person(name, age) VALUES('sato',    30);
 > ```json
 > ■ PostgreSQLの場合
 >   "ConnectionStrings": {
->     "MvcdbContext": "Server=localhost; Port=5432; Database=mvcdb; Username=mvcuser; > Password=mvcuser"
+>     "DefaultConnection": "Server=localhost; Port=5432; Database=mvcdb; Username=mvcuser; > Password=mvcuser"
 >   },
 > ```
 
